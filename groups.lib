@@ -1,0 +1,10 @@
+// -*-Faust-*-
+declare name "groups";
+declare author "Jakob Dübel";
+declare copyright "(c) 2018 Jakob Dübel";
+declare version "1.0.0";
+declare license "MIT";
+
+import("stdfaust.lib");
+
+fx(x) = hgroup("FX", x);

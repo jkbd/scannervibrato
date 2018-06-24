@@ -1,0 +1,105 @@
+// -*-Faust-*-
+declare name "effect";
+declare author "Jakob Dübel";
+declare copyright "(c) 2018 Jakob Dübel";
+declare version "1.0.0";
+declare license "MIT";
+
+import("stdfaust.lib");
+group = library("groups.lib");
+
+// This is a model of scanner and the delay line of a Hammond model B-3 tonewheel organ.
+// To get an overview read:
+//
+// https://modularsynthesis.com/modules/DJB-scanner/scanner.htm
+
+
+// 19 parallel delays of diffent length. The maximum delay and the
+// filter order is guessed to be close to the impulse responses in:
+//
+// K. Werner, W. R. Dunkel and F. G. Germain. "A Computational Model
+// of the Hammond Organ Vibrato/Chorus Using Wave Digital Filters".
+// In: Proceedings of the 19th International Conference on Digital
+// Audio Effects (DAFx-16). Brno, Czech, 2016, p. 277
+//
+delayline = par(i, 19,
+		( _@(ba.sec2samp((dmax/19)*i)) : fi.lowpass(min(i, 6), 6800) )
+	       ) with {
+  dmax = 0.85/1000;
+};
+
+// The wiring between delay lines and scanner device. 3 possible
+// states.
+switch(v_1, v_2, v_3, v_4, v_5,
+      v_6, v_7, v_8, v_9, v_10,
+      v_11, v_12, v_13, v_14, v_15,
+      v_16, v_17, v_18, v_19
+     ) = (
+  v_1,
+  v_2,
+  ( (v_3, v_3, v_4) : ba.selectn(3, depth-1)),
+  ( (v_4, v_5, v_7) : ba.selectn(3, depth-1)),
+  ( (v_5, v_7, v_10) : ba.selectn(3, depth-1)),
+  ( (v_6, v_9, v_13) : ba.selectn(3, depth-1)),
+  ( (v_7, v_11, v_16) : ba.selectn(3, depth-1)),
+  ( (v_8, v_12, v_18) : ba.selectn(3, depth-1)),
+  ( (v_9, v_13, v_19) : ba.selectn(3, depth-1))
+)
+with {
+  depth = group.fx(vslider("Depth", 1, 1, 3, 1) : int);
+};
+
+
+// Attenuation for the first 6 of the 19 delay lines.
+gain = *(ba.db2linear(-2.9)),
+       *(ba.db2linear(-2.8)),
+       *(ba.db2linear(-2.0)),
+       *(ba.db2linear(-1.5)),
+       *(ba.db2linear(-0.83)),
+       *(ba.db2linear(-0.56)),
+       si.bus(13);
+
+
+// The scanner is modeled by travelling triangular shaped positive
+// signal. Over time the peak is travelling back and forth across 9
+// terminals. The sum of all 9 signals is constantly 1. See also:
+//
+// K. Werner, W. R. Dunkel and F. G. Germain. "A Computational Model
+// of the Hammond Organ Vibrato/Chorus Using Wave Digital Filters".
+// In: Proceedings of the 19th International Conference on Digital
+// Audio Effects (DAFx-16). Brno, Czech, 2016, p. 273, Figure 3
+
+freq = 412.0/60.0;
+size = ba.sec2samp(1.0/freq) : int;
+
+tri(width, offset, t) = 0, (1 - abs(n)) : max with {
+  n = (t - offset)/width;
+};
+
+trianglepulse(offset) = tri(size/16, size/16, t) with {
+  counter = %(size)~+(1);
+  t = (counter - int(offset)) % size;
+};
+
+t_1 = trianglepulse(0);
+t_2 = trianglepulse(1*size/16) + trianglepulse(-1*size/16);
+t_3 = trianglepulse(2*size/16) + trianglepulse(-2*size/16);
+t_4 = trianglepulse(3*size/16) + trianglepulse(-3*size/16);
+t_5 = trianglepulse(4*size/16) + trianglepulse(-4*size/16);
+t_6 = trianglepulse(5*size/16) + trianglepulse(-5*size/16);
+t_7 = trianglepulse(6*size/16) + trianglepulse(-6*size/16);
+t_8 = trianglepulse(7*size/16) + trianglepulse(-7*size/16);
+t_9 = trianglepulse(8*size/16);
+
+
+scanner = *(t_1), *(t_2), *(t_3), *(t_4), *(t_5), *(t_6), *(t_7), *(t_8), *(t_9);
+
+// The gap between rotor blades is modelled as amplitude modulation.
+alpha = group.fx(vslider("AM", 0, 0, 0.15, 0.001) : si.smoo);
+modulator = _ <: _, *(os.oscsin(freq*16)) : si.interpolate(alpha);
+
+// 3 Modes: 0=off, 1=chorus, 2=vibrato
+scannervibrato = _ <: _, (_ <: delayline : gain : switch : scanner :> modulator) : si.interpolate(blend)
+with {
+  blend = group.fx(vslider("Mode", 0, 0, 2, 1)/2 : si.smoo);
+};
