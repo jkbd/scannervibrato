@@ -1,0 +1,3 @@
+[submodule "lv2"]
+	path = lv2
+	url = http://lv2plug.in/git/cgit.cgi/lv2.git

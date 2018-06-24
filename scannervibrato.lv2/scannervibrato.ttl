@@ -8,17 +8,23 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
+<https://github.com/jkbd#me>
+       a foaf:Person ;
+       foaf:name "Jakob Dübel" ;
+       foaf:mbox <20183922+jkbd@users.noreply.github.com> ;
+       foaf:homepage <https://github.com/jkbd> .         
+
 <https://github.com/jkbd/scannervibrato>
        a lv2:Plugin ,
          lv2:ModulatorPlugin ;
+       a doap:Project ;
        doap:name "scannervibrato" ;
        lv2:binary <scannervibrato.so> ;
        lv2:optionalFeature epp:supportsStrictBounds ;
-       lv2:optionalFeature lv2:hardRtCapable ;
-       doap:maintainer [
-         foaf:name "Jakob Dübel" ;
-         foaf:homepage <https://github.com/jkbd> ;
-       ] ;
+       lv2:optionalFeature lv2:hardRTCapable ;
+       doap:maintainer <https://github.com/jkbd#me> ;
+       a doap:Version ;
+       doap:revision "1.0.0" ;
        doap:revision "1.0.0" ;
        doap:license "MIT" ;
     lv2:port [

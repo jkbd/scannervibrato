@@ -12,6 +12,12 @@ $(BUNDLE)/%.so: %.cpp
 	faust -i -a lv2.cpp -cn scannervibrato $(FAUSTFLAGS) $< -o $@
 
 .PHONY: clean
+validate:
+	git submodule init
+	git submodule update
+	sord_validate `find lv2 -name '*.ttl'` ./scannervibrato.lv2/{manifest.ttl,scannervibrato.ttl}
+
+.PHONY: clean
 clean:
 	rm -f scannervibrato.cpp
 	rm -f $(BUNDLE)/*.so
