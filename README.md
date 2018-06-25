@@ -12,5 +12,23 @@ physical informed model implemented in
 $ make
 ```
 
-Then copy the `scannervibrato.lv2` directory into your `LV2_PATH`,
-e.g. `$HOME/.lv2` on Linux.
+## Install
+
+```bash
+$ make install
+```
+will copy the `scannervibrato.lv2` directory into `$HOME/.lv2`.
+
+## Run
+
+```bash
+$ jalv.qt5 https://github.com/jkbd/scannervibrato
+```
+or
+```bash
+$ jalv.gkt3 https://github.com/jkbd/scannervibrato
+```
+
+Note: The generic display of the control ports seems to be better in
+[Ardour](https://ardour.org/) than in
+[Carla](http://kxstudio.linuxaudio.org/Applications:Carla).
