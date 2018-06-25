@@ -17,6 +17,9 @@ validate:
 	git submodule update
 	sord_validate `find lv2 -name '*.ttl'` ./scannervibrato.lv2/{manifest.ttl,scannervibrato.ttl}
 
+install:
+	cp -r $(BUNDLE) ~/.lv2/
+
 .PHONY: clean
 clean:
 	rm -f scannervibrato.cpp
