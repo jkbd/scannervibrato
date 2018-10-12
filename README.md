@@ -17,7 +17,11 @@ $ make
 ```bash
 $ make install
 ```
-will copy the `scannervibrato.lv2` directory into `$HOME/.lv2`.
+will copy the `scannervibrato.lv2` directory into
+`$PREFIX/lib/lv2/`. By default `$PREFIX` is set to `/usr/local`.
+
+Instead of running `make install` you could also manually copy the
+bundle into you `~/.lv2/` directory.
 
 ## Run
 

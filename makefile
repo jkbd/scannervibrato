@@ -1,5 +1,6 @@
 BUNDLE:=scannervibrato.lv2
 
+PREFIX ?= /usr/local
 FAUSTFLAGS:=-scal -exp10
 CFLAGS:=-DURI_PREFIX=\"https://github.com/jkbd\"
 
@@ -18,7 +19,7 @@ validate:
 	sord_validate `find lv2 -name '*.ttl'` ./scannervibrato.lv2/{manifest.ttl,scannervibrato.ttl}
 
 install:
-	cp -r $(BUNDLE) ~/.lv2/
+	cp -r $(BUNDLE) $(PREFIX)/lib/lv2/
 
 .PHONY: clean
 clean:
