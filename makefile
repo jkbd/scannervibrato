@@ -19,7 +19,7 @@ validate:
 	sord_validate `find lv2 -name '*.ttl'` ./scannervibrato.lv2/{manifest.ttl,scannervibrato.ttl}
 
 install:
-	cp -r $(BUNDLE) $(PREFIX)/lib/lv2/
+	cp -r $(BUNDLE) $(DESTDIR)$(PREFIX)/lib/lv2/
 
 .PHONY: clean
 clean:
