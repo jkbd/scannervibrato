@@ -1,13 +1,15 @@
 BUNDLE:=scannervibrato.lv2
 
+CXX ?= g++
 PREFIX ?= /usr/local
+
 FAUSTFLAGS:=-scal -exp10
 CFLAGS:=-DURI_PREFIX=\"https://github.com/jkbd\"
 
 $(BUNDLE): $(BUNDLE)/manifest.ttl $(BUNDLE)/scannervibrato.ttl $(BUNDLE)/scannervibrato.so
 
 $(BUNDLE)/%.so: %.cpp
-	g++ -shared -fPIC -DPIC $(CFLAGS) $< -o $@
+	$(CXX) -shared -fPIC -DPIC $(CFLAGS) $< -o $@
 
 %.cpp: %.dsp effect.lib groups.lib
 	faust -i -a lv2.cpp -cn scannervibrato $(FAUSTFLAGS) $< -o $@
