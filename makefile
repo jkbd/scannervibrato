@@ -14,7 +14,7 @@ $(BUNDLE)/%.so: %.cpp
 %.cpp: %.dsp effect.lib groups.lib
 	faust -i -a lv2.cpp -cn scannervibrato $(FAUSTFLAGS) $< -o $@
 
-.PHONY: clean
+.PHONY: validate
 validate:
 	git submodule init
 	git submodule update
