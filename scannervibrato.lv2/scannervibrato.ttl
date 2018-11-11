@@ -25,7 +25,6 @@
        doap:maintainer <https://github.com/jkbd#me> ;
        a doap:Version ;
        doap:revision "1.0.0" ;
-       doap:revision "1.0.0" ;
        doap:license "MIT" ;
     lv2:port [
 	a lv2:InputPort ;
