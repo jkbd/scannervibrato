@@ -4,7 +4,7 @@ A [LV2](http://lv2plug.in) plug-in for the Chorus or Vibrato
 modulation effect used in different tonewheel organs. Based on a
 physical informed model implemented in
 [Faust](http://faust.grame.fr/). For details see the comments in
-`effect.lib`.
+`effect.lib`. This is not a rotary speaker simulation!
 
 ## Build
 
